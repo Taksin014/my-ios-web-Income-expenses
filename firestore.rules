@@ -1,44 +1,47 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ══════════════════════════════════════════════════
-    //  users/{uid}/transactions/{txId}
-    //  — แต่ละคนเข้าถึงได้แค่ข้อมูลของตัวเอง
-    // ══════════════════════════════════════════════════
-    match /users/{uid}/transactions/{txId} {
-
-      // อ่านได้เฉพาะเจ้าของ
-      allow read: if request.auth != null
-                  && request.auth.uid == uid;
-
-      // เขียน/แก้ไขได้เฉพาะเจ้าของ
-      // และ validate โครงสร้างข้อมูลด้วย
-      allow write: if request.auth != null
-                   && request.auth.uid == uid
-                   && isValidTransaction(request.resource.data);
-
-      // ลบได้เฉพาะเจ้าของ
-      allow delete: if request.auth != null
-                    && request.auth.uid == uid;
+    // ─── Helper functions ──────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
     }
 
-    // ปิดกั้น path อื่นทั้งหมด
-    match /{document=**} {
-      allow read, write: if false;
+    function isAdmin() {
+      return isSignedIn() &&
+             request.auth.token.email == 'facebookthaitaksin1@gmail.com';
     }
+
+    // เช็คว่า user ถูกแบนหรือเปล่า โดยดูจาก banned_users collection
+    function isBanned() {
+      return isSignedIn() &&
+             exists(/databases/$(database)/documents/banned_users/$(request.auth.uid));
+    }
+
+    // ─── Users collection ──────────────────────────────────────
+    // เก็บ profile (displayName, email, photoURL, lastSeen)
+    match /users/{userId} {
+      allow read:
+        if isAdmin() || (isSignedIn() && request.auth.uid == userId && !isBanned());
+      allow write:
+        if isAdmin() || (isSignedIn() && request.auth.uid == userId && !isBanned());
+
+      // ─── Transactions subcollection ───────────────────────
+      // Admin อ่าน/เขียน/ลบของทุก user ได้
+      // User อ่าน/เขียน/ลบเฉพาะของตัวเอง (ถ้าไม่โดนแบน)
+      match /transactions/{txId} {
+        allow read, write, delete:
+          if isAdmin() ||
+             (isSignedIn() && request.auth.uid == userId && !isBanned());
+      }
+    }
+
+    // ─── Banned users collection ───────────────────────────────
+    // เก็บ { uid, bannedAt, bannedBy } ของ user ที่ถูกแบน
+    // Admin เขียน/ลบ/อ่านได้อย่างเดียว — user อื่นแตะไม่ได้เลย
+    match /banned_users/{uid} {
+      allow read, write, delete: if isAdmin();
+    }
+
   }
-}
-
-// ── Validation function ──────────────────────────
-function isValidTransaction(data) {
-  return data.keys().hasAll(['id', 'type', 'amount', 'date'])
-    && data.id is string
-    && data.id.size() > 0
-    && data.type in ['income', 'expense']
-    && data.amount is number
-    && data.amount > 0
-    && data.date is string
-    && data.date.matches('\\d{4}-\\d{2}-\\d{2}');
 }

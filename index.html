@@ -1458,6 +1458,368 @@
       cursor: pointer;
       font-family: 'Noto Sans Thai', sans-serif;
     }
+
+    /* ─── ADMIN ──────────────────────────── */
+    .admin-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: var(--bg);
+      overflow-y: auto;
+      padding-bottom: 40px;
+    }
+
+    .admin-panel.open {
+      display: block;
+    }
+
+    .admin-hdr {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border2);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-back {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--text-sub);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+      flex-shrink: 0;
+    }
+
+    .admin-back:hover {
+      background: var(--exp-bg);
+      color: var(--exp);
+      border-color: var(--exp-border);
+    }
+
+    .admin-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--acc);
+      flex: 1;
+    }
+
+    .admin-badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--acc-bg);
+      border: 1px solid var(--acc-border);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--acc);
+      letter-spacing: .5px;
+    }
+
+    .admin-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 14px 16px 0;
+    }
+
+    .admin-stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .admin-stat-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .admin-stat-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .admin-stat-val.inc {
+      color: var(--inc);
+    }
+
+    .admin-stat-val.exp {
+      color: var(--exp);
+    }
+
+    .admin-sec-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--text-dim);
+      padding: 16px 16px 8px;
+    }
+
+    .admin-user-card {
+      margin: 0 16px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .admin-user-hdr {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: background .14s;
+    }
+
+    .admin-user-hdr:hover {
+      background: var(--card);
+    }
+
+    .admin-user-av {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface2);
+      flex-shrink: 0;
+      object-fit: cover;
+    }
+
+    .admin-user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .admin-user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .admin-user-email {
+      font-size: 11px;
+      color: var(--text-sub);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .admin-user-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .admin-user-txcount {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    .admin-user-caret {
+      font-size: 12px;
+      color: var(--text-dim);
+      transition: transform .2s;
+    }
+
+    .admin-user-card.expanded .admin-user-caret {
+      transform: rotate(180deg);
+    }
+
+    .admin-user-ban-btn {
+      padding: 3px 9px;
+      border-radius: 6px;
+      border: 1px solid var(--exp-border);
+      background: var(--exp-bg);
+      color: var(--exp);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans Thai', sans-serif;
+    }
+
+    .admin-user-ban-btn.banned {
+      border-color: var(--inc-border);
+      background: var(--inc-bg);
+      color: var(--inc);
+    }
+
+    .admin-user-txlist {
+      display: none;
+      border-top: 1px solid var(--border);
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .admin-user-card.expanded .admin-user-txlist {
+      display: block;
+    }
+
+    .admin-tx-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .admin-tx-row:last-child {
+      border-bottom: none;
+    }
+
+    .admin-tx-ico {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .admin-tx-ico.income {
+      background: var(--inc-bg);
+    }
+
+    .admin-tx-ico.expense {
+      background: var(--exp-bg);
+    }
+
+    .admin-tx-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .admin-tx-note {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .admin-tx-date {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 1px;
+    }
+
+    .admin-tx-amt {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .admin-tx-amt.income {
+      color: var(--inc);
+    }
+
+    .admin-tx-amt.expense {
+      color: var(--exp);
+    }
+
+    .admin-tx-del {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all .14s;
+    }
+
+    .admin-tx-del:hover {
+      background: var(--exp-bg);
+      color: var(--exp);
+      border-color: var(--exp-border);
+    }
+
+    .admin-loading {
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    .admin-empty {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .admin-refresh-btn {
+      margin: 0 16px 4px;
+      width: calc(100% - 32px);
+      padding: 11px;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+      font-family: 'Noto Sans Thai', sans-serif;
+    }
+
+    .admin-refresh-btn:hover {
+      background: var(--acc-bg);
+      border-color: var(--acc-border);
+      color: var(--acc);
+    }
+
+    .mrow.admin-row .mtitle {
+      color: var(--acc);
+    }
+
+    .mrow.admin-row {
+      border-color: var(--acc-border);
+    }
+
+    .mrow.admin-row:hover {
+      background: var(--acc-bg);
+    }
+
+    .admin-user-card.banned-card {
+      border-color: var(--exp-border);
+    }
+
+    .admin-user-card.banned-card .admin-user-hdr {
+      background: var(--exp-bg);
+    }
   </style>
 </head>
 
@@ -1690,6 +2052,16 @@
         </div>
         <span class="marrow">›</span>
       </div>
+      <!-- Admin menu row — แสดงเฉพาะ admin -->
+      <div class="mrow admin-row" id="admin-menu-row" onclick="openAdminPanel()" style="display:none">
+        <div class="mrow-l"><span class="mico">🛡️</span>
+          <div>
+            <div class="mtitle">Admin Panel</div>
+            <div class="msub">จัดการ users และข้อมูลทั้งหมด</div>
+          </div>
+        </div>
+        <span class="marrow">›</span>
+      </div>
       <div class="mrow danger" onclick="clearAll()">
         <div class="mrow-l"><span class="mico">🗑️</span>
           <div>
@@ -1700,6 +2072,41 @@
         <span class="marrow">›</span>
       </div>
       <input type="file" id="imp-file" accept=".json" style="display:none" onchange="handleImport(event)">
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-panel" id="admin-panel">
+    <div class="admin-hdr">
+      <button class="admin-back" onclick="closeAdminPanel()">‹</button>
+      <div class="admin-title">🛡️ Admin Panel</div>
+      <div class="admin-badge">ADMIN</div>
+    </div>
+    <!-- Stats -->
+    <div class="admin-stats-grid" id="admin-stats-grid">
+      <div class="admin-stat-card">
+        <div class="admin-stat-lbl">Users ทั้งหมด</div>
+        <div class="admin-stat-val" id="admin-total-users">—</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-lbl">รายการทั้งหมด</div>
+        <div class="admin-stat-val" id="admin-total-txs">—</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-lbl">รายรับรวม</div>
+        <div class="admin-stat-val inc" id="admin-total-inc">—</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-lbl">รายจ่ายรวม</div>
+        <div class="admin-stat-val exp" id="admin-total-exp">—</div>
+      </div>
+    </div>
+    <!-- Refresh -->
+    <div class="admin-sec-title">รายการ Users</div>
+    <button class="admin-refresh-btn" onclick="adminLoadUsers()">🔄 โหลดข้อมูลใหม่</button>
+    <!-- User list -->
+    <div id="admin-user-list">
+      <div class="admin-loading">กำลังโหลด...</div>
     </div>
   </div>
 
@@ -1763,12 +2170,17 @@
           updateSyncUI(user);
           // Subscribe realtime
           subscribeRealtime(user.uid);
+          // Show admin menu if admin
+          const row = document.getElementById('admin-menu-row');
+          if (row) row.style.display = user.email === 'facebookthaitaksin1@gmail.com' ? 'flex' : 'none';
         } else {
           // ยังไม่ล็อกอิน
           window._fbUser = null;
           if (unsubscribe) { unsubscribe(); unsubscribe = null; }
           showLoginScreen();
           updateSyncUI(null);
+          const row = document.getElementById('admin-menu-row');
+          if (row) row.style.display = 'none';
         }
       });
     } else {
@@ -1943,6 +2355,11 @@
 
     // expose for non-module JS
     window._updateSyncUI = updateSyncUI;
+
+    /* ── Admin: expose Firestore refs ─────────── */
+    window._adminGetDb = () => db;
+    window._adminGetFirestoreFns = () => ({ collection, doc, getDocs, deleteDoc, writeBatch, getDoc: null });
+    window._adminImports = { collection, getDocs, deleteDoc, doc, writeBatch, setDoc };
   </script>
 
   <script>
@@ -2201,9 +2618,238 @@
 
     /* ── KEYBOARD ────────────────── */
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') { closeAdd(); closeMenu(); closeMPicker(); }
+      if (e.key === 'Escape') { closeAdd(); closeMenu(); closeMPicker(); closeAdminPanel(); }
       if (e.key === 'Enter' && document.getElementById('add-ov').classList.contains('open')) submitTx();
     });
+
+    /* ════════════════════════════════════════════
+       ADMIN SYSTEM — Real Firestore ban
+       banned_users/{uid} collection ใน Firestore
+       ════════════════════════════════════════════ */
+    const ADMIN_EMAIL = 'facebookthaitaksin1@gmail.com';
+
+    function isAdmin(user) {
+      return user && user.email === ADMIN_EMAIL;
+    }
+
+    function openAdminPanel() {
+      const user = window._fbUser;
+      if (!isAdmin(user)) { showToast('❌ ไม่มีสิทธิ์ Admin'); return; }
+      closeMenu();
+      document.getElementById('admin-panel').classList.add('open');
+      adminLoadUsers();
+    }
+
+    function closeAdminPanel() {
+      document.getElementById('admin-panel').classList.remove('open');
+    }
+
+    /* ── โหลด users + transactions + สถานะ ban ─ */
+    async function adminLoadUsers() {
+      const db = window._adminGetDb && window._adminGetDb();
+      const fns = window._adminImports;
+      if (!db || !fns) { showToast('⚠️ Firebase ยังไม่พร้อม'); return; }
+
+      const listEl = document.getElementById('admin-user-list');
+      listEl.innerHTML = '<div class="admin-loading">⏳ กำลังโหลดข้อมูล users...</div>';
+
+      try {
+        const { collection, getDocs } = fns;
+
+        // โหลด users, banned_users พร้อมกัน
+        const [usersSnap, bannedSnap] = await Promise.all([
+          getDocs(collection(db, 'users')),
+          getDocs(collection(db, 'banned_users'))
+        ]);
+
+        const bannedSet = new Set(bannedSnap.docs.map(d => d.id));
+
+        if (usersSnap.empty) {
+          listEl.innerHTML = '<div class="admin-empty">ยังไม่มี users ในระบบ</div>';
+          adminUpdateStats([], 0, 0);
+          return;
+        }
+
+        let allUserData = [];
+        let totalInc = 0, totalExp = 0;
+
+        // โหลด transactions ของทุก user พร้อมกัน
+        const userFetches = usersSnap.docs.map(async userDoc => {
+          const uid = userDoc.id;
+          const meta = userDoc.data() || {};
+          const txSnap = await getDocs(collection(db, 'users', uid, 'transactions'));
+          const txList = txSnap.docs.map(d => d.data());
+          const inc = txList.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+          const exp = txList.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+          totalInc += inc;
+          totalExp += exp;
+          allUserData.push({
+            uid,
+            txList,
+            inc,
+            exp,
+            isBanned: bannedSet.has(uid),
+            displayName: meta.displayName || '',
+            email: meta.email || '',
+            photoURL: meta.photoURL || ''
+          });
+        });
+
+        await Promise.all(userFetches);
+
+        adminUpdateStats(allUserData, totalInc, totalExp);
+        renderAdminUserList(allUserData);
+
+      } catch (e) {
+        console.error('Admin load error', e);
+        listEl.innerHTML = `<div class="admin-empty">❌ โหลดไม่สำเร็จ<br><small style="color:var(--text-dim)">${e.message}</small></div>`;
+      }
+    }
+
+    function adminUpdateStats(users, totalInc, totalExp) {
+      document.getElementById('admin-total-users').textContent = users.length;
+      const totalTxs = users.reduce((s, u) => s + u.txList.length, 0);
+      document.getElementById('admin-total-txs').textContent = totalTxs.toLocaleString();
+      document.getElementById('admin-total-inc').textContent = fmt(totalInc);
+      document.getElementById('admin-total-exp').textContent = fmt(totalExp);
+    }
+
+    function renderAdminUserList(users) {
+      const listEl = document.getElementById('admin-user-list');
+      if (!users.length) {
+        listEl.innerHTML = '<div class="admin-empty">ไม่มี users</div>';
+        return;
+      }
+
+      users.sort((a, b) => b.txList.length - a.txList.length);
+
+      listEl.innerHTML = users.map((u, i) => {
+        const shortUid = u.uid.slice(0, 10) + '…';
+        const displayName = u.displayName || shortUid;
+        const displayEmail = u.email || 'UID: ' + shortUid;
+        const avatarEl = u.photoURL
+          ? `<img class="admin-user-av" src="${u.photoURL}" onerror="this.style.display='none'">`
+          : `<div class="admin-user-av" style="display:flex;align-items:center;justify-content:center;font-size:16px;">👤</div>`;
+
+        const txRows = u.txList.length === 0
+          ? `<div class="admin-empty">ไม่มีรายการ</div>`
+          : u.txList
+            .sort((a, b) => b.date.localeCompare(a.date))
+            .slice(0, 50)
+            .map(t => `
+            <div class="admin-tx-row">
+              <div class="admin-tx-ico ${t.type}">${t.cat ? t.cat.split(' ')[0] : (t.type === 'income' ? '💰' : '💸')}</div>
+              <div class="admin-tx-body">
+                <div class="admin-tx-note">${t.note || t.cat || (t.type === 'income' ? 'รายรับ' : 'รายจ่าย')}</div>
+                <div class="admin-tx-date">${t.date}${t.cat ? ' · ' + t.cat : ''}</div>
+              </div>
+              <div class="admin-tx-amt ${t.type}">${t.type === 'income' ? '+' : '-'}${fmt(t.amount)}</div>
+              <button class="admin-tx-del" onclick="adminDelTx('${u.uid}','${t.id}',this)" title="ลบรายการ">✕</button>
+            </div>`).join('');
+
+        return `
+          <div class="admin-user-card${u.isBanned ? ' banned-card' : ''}" id="auc-${i}">
+            <div class="admin-user-hdr" onclick="adminToggleUser(${i})">
+              ${avatarEl}
+              <div class="admin-user-info">
+                <div class="admin-user-name">${u.isBanned ? '🚫 ' : ''}${displayName}</div>
+                <div class="admin-user-email">${displayEmail}</div>
+                <div class="admin-user-email" style="margin-top:2px">${u.txList.length} รายการ · รับ ${fmt(u.inc)} · จ่าย ${fmt(u.exp)}</div>
+              </div>
+              <div class="admin-user-meta">
+                <button class="admin-user-ban-btn ${u.isBanned ? 'banned' : ''}"
+                  onclick="adminToggleBan(event,'${u.uid}',${i},${u.isBanned})">
+                  ${u.isBanned ? '✅ ปลดแบน' : '🚫 แบน'}
+                </button>
+                <span class="admin-user-caret">▼</span>
+              </div>
+            </div>
+            <div class="admin-user-txlist" id="atx-${i}">${txRows}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function adminToggleUser(i) {
+      document.getElementById('auc-' + i).classList.toggle('expanded');
+    }
+
+    /* ── ลบรายการของ user คนอื่น ────────────── */
+    async function adminDelTx(uid, txId, btn) {
+      if (!confirm('ลบรายการนี้ของ user คนนี้?')) return;
+      const fns = window._adminImports;
+      const db = window._adminGetDb();
+      try {
+        await fns.deleteDoc(fns.doc(db, 'users', uid, 'transactions', txId));
+        btn.closest('.admin-tx-row').remove();
+        showToast('✅ ลบรายการแล้ว');
+        adminLoadUsers(); // refresh stats
+      } catch (e) {
+        showToast('❌ ลบไม่สำเร็จ: ' + e.message);
+      }
+    }
+
+    /* ── แบน / ปลดแบน — เขียนลง Firestore จริง ── */
+    async function adminToggleBan(e, uid, cardIdx, currentlyBanned) {
+      e.stopPropagation();
+      const fns = window._adminImports;
+      const db = window._adminGetDb();
+      if (!db || !fns) return;
+
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      btn.textContent = '⏳';
+
+      try {
+        if (currentlyBanned) {
+          // ปลดแบน — ลบ doc ออกจาก banned_users
+          await fns.deleteDoc(fns.doc(db, 'banned_users', uid));
+          showToast('✅ ปลดแบน user แล้ว — เข้าถึง Firestore ได้ปกติ');
+        } else {
+          if (!confirm('แบน user นี้?\n\n🚫 Firestore Rules จะบล็อกการอ่าน/เขียนของ user ทันที\nUser ยังล็อกอินได้ แต่ไม่สามารถโหลดหรือบันทึกข้อมูลได้')) {
+            btn.disabled = false;
+            btn.textContent = '🚫 แบน';
+            return;
+          }
+          // แบน — เขียน doc เข้า banned_users/{uid}
+          await fns.setDoc(fns.doc(db, 'banned_users', uid), {
+            bannedAt: new Date().toISOString(),
+            bannedBy: ADMIN_EMAIL,
+            uid
+          });
+          showToast('🚫 แบน user แล้ว — Firestore บล็อกแล้ว');
+        }
+        // Reload to reflect new state
+        await adminLoadUsers();
+      } catch (e2) {
+        console.error('Ban error', e2);
+        showToast('❌ ดำเนินการไม่สำเร็จ: ' + e2.message);
+        btn.disabled = false;
+        btn.textContent = currentlyBanned ? '✅ ปลดแบน' : '🚫 แบน';
+      }
+    }
+
+    /* ── บันทึก user profile ลง Firestore เมื่อ login ── */
+    // (เรียกจาก auth state ใน module script ไม่ได้ เพราะ cross-script scope)
+    // ใช้ polling observer แทน — ทำงานแค่ครั้งแรก
+    let _profileSaved = false;
+    const _profileObserver = setInterval(async () => {
+      const user = window._fbUser;
+      if (!user || _profileSaved) return;
+      const db = window._adminGetDb && window._adminGetDb();
+      const fns = window._adminImports;
+      if (!db || !fns) return;
+      _profileSaved = true;
+      clearInterval(_profileObserver);
+      try {
+        // บันทึก/อัปเดต profile ใน users/{uid} เพื่อให้ admin เห็นชื่อ
+        await fns.setDoc(fns.doc(db, 'users', user.uid), {
+          displayName: user.displayName || '',
+          email: user.email || '',
+          photoURL: user.photoURL || '',
+          lastSeen: new Date().toISOString()
+        }, { merge: true });
+      } catch (_) { /* ไม่ critical */ }
+    }, 1200);
   </script>
 </body>
 
