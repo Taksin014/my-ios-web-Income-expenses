@@ -875,6 +875,22 @@
       }
     }
 
+    .overlay.closing {
+      animation: overlayOut .28s var(--ease) forwards;
+    }
+    @keyframes overlayOut {
+      to { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
+    }
+
+    .sheet.dragging {
+      transition: none !important;
+    }
+    .sheet.dismissing {
+      transform: translateY(110%) !important;
+      opacity: 0;
+      transition: transform .28s cubic-bezier(.4,0,1,1), opacity .22s ease !important;
+    }
+
     .sheet {
       width: 100%;
       max-width: 540px;
@@ -1820,6 +1836,425 @@
     .admin-user-card.banned-card .admin-user-hdr {
       background: var(--exp-bg);
     }
+
+    /* ─── ADMIN VIEW TOGGLE ──────────────────── */
+    .admin-view-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 12px 16px 0;
+    }
+    .admin-vtab {
+      flex: 1;
+      padding: 9px 0;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--text-sub);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Noto Sans Thai', sans-serif;
+      transition: all .15s var(--ease);
+      text-align: center;
+    }
+    .admin-vtab.active {
+      background: var(--acc-bg);
+      border-color: var(--acc-border);
+      color: var(--acc);
+    }
+
+    /* ─── ADMIN CARD GRID ────────────────────── */
+    .admin-card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 12px 16px 0;
+    }
+    .admin-ucard {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      cursor: pointer;
+      transition: all .18s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .admin-ucard::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--inc-mid), var(--acc));
+      opacity: 0;
+      transition: opacity .18s;
+    }
+    .admin-ucard:hover::before { opacity: 1; }
+    .admin-ucard:hover { background: var(--card); border-color: var(--border2); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    .admin-ucard:active { transform: scale(.98); }
+    .admin-ucard.banned-card { border-color: var(--exp-border); }
+    .admin-ucard.banned-card::before { background: var(--exp-mid); opacity: 1; }
+
+    .admin-ucard-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .admin-ucard-av {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--surface2);
+      flex-shrink: 0;
+      object-fit: cover;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+    .admin-ucard-info { flex: 1; min-width: 0; }
+    .admin-ucard-name {
+      font-size: 12px; font-weight: 700; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .admin-ucard-email {
+      font-size: 10px; color: var(--text-sub);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .admin-ucard-stats {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6px; margin-bottom: 10px;
+    }
+    .admin-ucard-stat {
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 6px 8px;
+    }
+    .admin-ucard-stat-lbl {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--text-dim); margin-bottom: 2px;
+    }
+    .admin-ucard-stat-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; font-weight: 600; color: var(--text);
+    }
+    .admin-ucard-stat-val.inc { color: var(--inc); }
+    .admin-ucard-stat-val.exp { color: var(--exp); }
+
+    /* mini sparkline on card */
+    .admin-ucard-spark {
+      display: flex; gap: 2px; align-items: flex-end;
+      height: 30px; margin-bottom: 8px;
+    }
+    .admin-ucard-spark-bar {
+      flex: 1; border-radius: 2px 2px 0 0; min-height: 2px;
+      background: var(--inc-mid); opacity: .7;
+      transition: height .4s var(--ease);
+    }
+    .admin-ucard-spark-bar.exp { background: var(--exp-mid); }
+
+    .admin-ucard-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .admin-ucard-txcount {
+      font-size: 10px; color: var(--text-sub);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .admin-ucard-ban {
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--exp-border);
+      background: var(--exp-bg);
+      color: var(--exp);
+      font-size: 9px; font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans Thai', sans-serif;
+      transition: all .15s;
+    }
+    .admin-ucard-ban.banned {
+      border-color: var(--inc-border);
+      background: var(--inc-bg);
+      color: var(--inc);
+    }
+    .admin-ucard-ban:hover { opacity: .8; }
+
+    /* ─── ADMIN USER DETAIL ──────────────────── */
+    .admin-detail {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 600;
+      background: var(--bg);
+      overflow-y: auto;
+      padding-bottom: 40px;
+    }
+    .admin-detail.open { display: block; animation: slideInRight .25s var(--ease); }
+    @keyframes slideInRight {
+      from { transform: translateX(30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .admin-detail-hdr {
+      position: sticky; top: 0; z-index: 10;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border2);
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .admin-detail-hero {
+      margin: 14px 16px 0;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .admin-detail-av {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--surface2); object-fit: cover; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 24px;
+    }
+    .admin-detail-info { flex: 1; min-width: 0; }
+    .admin-detail-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .admin-detail-email { font-size: 12px; color: var(--text-sub); }
+    .admin-detail-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 8px; margin: 12px 16px 0;
+    }
+    .admin-detail-stat {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius-xs); padding: 10px 12px;
+    }
+    .admin-detail-stat-lbl {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--text-dim); margin-bottom: 4px;
+    }
+    .admin-detail-stat-val {
+      font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600; color: var(--text);
+    }
+    .admin-detail-stat-val.inc { color: var(--inc); }
+    .admin-detail-stat-val.exp { color: var(--exp); }
+
+    /* filters in detail view */
+    .admin-detail-filters {
+      padding: 12px 16px 0;
+      display: flex; gap: 8px; flex-direction: column;
+    }
+    .admin-detail-search {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius-xs); padding: 0 12px;
+    }
+    .admin-detail-search:focus-within { border-color: var(--acc); }
+    .admin-detail-search input {
+      flex: 1; background: none; border: none; outline: none;
+      padding: 10px 0;
+      font-family: 'Noto Sans Thai', sans-serif; font-size: 13px; color: var(--text);
+    }
+    .admin-detail-search input::placeholder { color: var(--text-dim); }
+    .admin-filter-row {
+      display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .admin-filter-row::-webkit-scrollbar { display: none; }
+    .admin-fpill {
+      flex-shrink: 0; padding: 6px 12px;
+      border-radius: 50px; border: 1px solid var(--border2);
+      background: var(--surface); color: var(--text-sub);
+      font-size: 11px; font-weight: 600; cursor: pointer;
+      transition: all .14s; font-family: 'Noto Sans Thai', sans-serif;
+      white-space: nowrap;
+    }
+    .admin-fpill.active {
+      background: var(--acc-bg); border-color: var(--acc-border); color: var(--acc);
+    }
+    .admin-month-filter {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .admin-month-sel {
+      flex: 1; padding: 8px 10px;
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius-xs); color: var(--text);
+      font-family: 'Noto Sans Thai', sans-serif; font-size: 12px;
+      outline: none; appearance: none; -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .admin-month-sel:focus { border-color: var(--acc); }
+    [data-theme="dark"] .admin-month-sel option { background: #2c2825; }
+
+    .admin-detail-list { padding: 10px 16px 0; }
+
+    /* ─── MONTHLY SUMMARY (User) ─────────────── */
+    .msummary-btn {
+      display: none;
+      margin: 10px 16px 0;
+      width: calc(100% - 32px);
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'Noto Sans Thai', sans-serif;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; text-align: left;
+      display: flex; align-items: center; gap: 10px;
+      transition: all .15s;
+    }
+    .msummary-btn:hover { background: var(--card); }
+
+    .msummary-panel {
+      display: none;
+      position: fixed; inset: 0; z-index: 500;
+      background: var(--bg); overflow-y: auto; padding-bottom: 40px;
+    }
+    .msummary-panel.open { display: block; }
+
+    .msummary-hdr {
+      position: sticky; top: 0; z-index: 10;
+      background: var(--bg); border-bottom: 1px solid var(--border2);
+      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .msummary-title {
+      font-family: 'DM Serif Display', serif; font-size: 20px;
+      color: var(--acc); flex: 1;
+    }
+
+    .msummary-hero {
+      margin: 14px 16px 0;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 20px; position: relative; overflow: hidden;
+    }
+    .msummary-hero::after {
+      content: '';
+      position: absolute; top: -50px; right: -50px;
+      width: 160px; height: 160px; border-radius: 50%;
+      background: radial-gradient(circle, var(--acc-bg) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .msummary-hero-month {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text-dim); margin-bottom: 4px;
+    }
+    .msummary-hero-bal {
+      font-family: 'DM Serif Display', serif; font-size: 38px;
+      line-height: 1.05; color: var(--text); margin-bottom: 16px;
+    }
+    .msummary-hero-bal.neg { color: var(--exp); }
+    .msummary-hero-row {
+      display: flex; gap: 0;
+    }
+    .msummary-hero-item { flex: 1; }
+    .msummary-hero-item + .msummary-hero-item {
+      border-left: 1px solid var(--border2); padding-left: 16px;
+    }
+    .msummary-hero-lbl {
+      font-size: 11px; color: var(--text-sub); margin-bottom: 3px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .msummary-hero-val {
+      font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 600;
+    }
+
+    /* bar chart for monthly */
+    .msummary-chart-wrap {
+      margin: 12px 16px 0;
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius-sm); padding: 16px;
+    }
+    .msummary-chart-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--text-dim); margin-bottom: 14px;
+    }
+    .msummary-bars {
+      display: flex; gap: 5px; align-items: flex-end; height: 80px;
+    }
+    .msummary-bar-col {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 4px; height: 100%;
+    }
+    .msummary-bar-pair {
+      display: flex; gap: 2px; align-items: flex-end;
+      flex: 1; width: 100%;
+    }
+    .msummary-bar {
+      flex: 1; border-radius: 3px 3px 0 0; min-height: 2px;
+      transition: height .5s var(--ease);
+    }
+    .msummary-bar.i { background: var(--inc-mid); opacity: .85; }
+    .msummary-bar.e { background: var(--exp-mid); opacity: .85; }
+    .msummary-bar-lbl {
+      font-size: 8px; color: var(--text-dim); font-family: 'DM Mono', monospace;
+      text-align: center;
+    }
+
+    /* category breakdown */
+    .msummary-cats-wrap {
+      margin: 12px 16px 0;
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius-sm); padding: 16px;
+    }
+    .msummary-cats-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--text-dim); margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .msummary-cat-tabs {
+      display: flex; gap: 5px; margin-bottom: 12px;
+    }
+    .msummary-cat-tab {
+      padding: 5px 12px; border-radius: 20px;
+      border: 1px solid var(--border2); background: var(--surface2);
+      color: var(--text-sub); font-size: 11px; font-weight: 600;
+      cursor: pointer; font-family: 'Noto Sans Thai', sans-serif; transition: all .14s;
+    }
+    .msummary-cat-tab.active {
+      background: var(--acc-bg); border-color: var(--acc-border); color: var(--acc);
+    }
+    .msummary-cat-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+    }
+    .msummary-cat-row:last-child { border-bottom: none; }
+    .msummary-cat-ico {
+      width: 30px; height: 30px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0;
+    }
+    .msummary-cat-bar-wrap { flex: 1; }
+    .msummary-cat-name {
+      font-size: 12px; font-weight: 600; color: var(--text);
+      margin-bottom: 4px; display: flex; justify-content: space-between;
+    }
+    .msummary-cat-name span { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; }
+    .msummary-cat-track {
+      height: 5px; border-radius: 3px; background: var(--surface2); overflow: hidden;
+    }
+    .msummary-cat-fill {
+      height: 100%; border-radius: 3px; transition: width .6s var(--ease);
+    }
+
+    /* top transactions */
+    .msummary-top-wrap {
+      margin: 12px 16px 0;
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius-sm); padding: 16px;
+    }
+
+    /* insights cards */
+    .msummary-insights {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px; margin: 12px 16px 0;
+    }
+    .msummary-insight {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius-xs); padding: 12px;
+    }
+    .msummary-insight-ico { font-size: 20px; margin-bottom: 6px; }
+    .msummary-insight-val {
+      font-family: 'DM Serif Display', serif; font-size: 16px;
+      color: var(--text); margin-bottom: 2px;
+    }
+    .msummary-insight-lbl { font-size: 10px; color: var(--text-sub); line-height: 1.4; }
   </style>
 </head>
 
@@ -1923,6 +2358,16 @@
         style="color:var(--exp-mid)">■</span> — 7 วันล่าสุด</div>
     <div class="spark-grid" id="spark-grid"></div>
   </div>
+
+  <!-- MONTHLY SUMMARY BUTTON -->
+  <button class="msummary-btn" id="msummary-btn" onclick="openMonthlySummary()">
+    <span style="font-size:20px">📊</span>
+    <div>
+      <div style="font-size:14px;font-weight:700;color:var(--text)">สรุปรายเดือน</div>
+      <div style="font-size:11px;color:var(--text-sub);font-weight:400;margin-top:1px" id="msummary-subtitle">ดูสรุปรายรับ-รายจ่าย พร้อมกราฟและหมวดหมู่</div>
+    </div>
+    <span style="margin-left:auto;color:var(--text-dim);font-size:16px">›</span>
+  </button>
 
   <!-- SEARCH -->
   <div class="filter-wrap" id="filter-wrap">
@@ -2075,6 +2520,28 @@
     </div>
   </div>
 
+  <!-- MONTHLY SUMMARY PANEL (User) -->
+  <div class="msummary-panel" id="msummary-panel">
+    <div class="msummary-hdr">
+      <button class="admin-back" onclick="closeMonthlySummary()">‹</button>
+      <div class="msummary-title" id="msummary-panel-title">สรุปรายเดือน</div>
+    </div>
+    <div id="msummary-content"></div>
+  </div>
+
+  <!-- ADMIN USER DETAIL PANEL -->
+  <div class="admin-detail" id="admin-detail">
+    <div class="admin-detail-hdr">
+      <button class="admin-back" onclick="closeAdminDetail()">‹</button>
+      <div style="flex:1">
+        <div class="admin-title" id="detail-title" style="font-size:16px">รายการของ user</div>
+        <div style="font-size:11px;color:var(--text-sub)" id="detail-subtitle"></div>
+      </div>
+      <button id="detail-ban-btn" style="padding:6px 12px;border-radius:8px;border:1px solid var(--exp-border);background:var(--exp-bg);color:var(--exp);font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans Thai',sans-serif;" onclick="adminDetailBan()">🚫 แบน</button>
+    </div>
+    <div id="admin-detail-inner"></div>
+  </div>
+
   <!-- ADMIN PANEL -->
   <div class="admin-panel" id="admin-panel">
     <div class="admin-hdr">
@@ -2101,12 +2568,27 @@
         <div class="admin-stat-val exp" id="admin-total-exp">—</div>
       </div>
     </div>
+    <!-- View tabs -->
+    <div class="admin-view-tabs">
+      <button class="admin-vtab active" id="vtab-cards" onclick="adminSwitchView('cards')">🗂️ Card View</button>
+      <button class="admin-vtab" id="vtab-list" onclick="adminSwitchView('list')">📋 List View</button>
+    </div>
     <!-- Refresh -->
-    <div class="admin-sec-title">รายการ Users</div>
-    <button class="admin-refresh-btn" onclick="adminLoadUsers()">🔄 โหลดข้อมูลใหม่</button>
-    <!-- User list -->
-    <div id="admin-user-list">
-      <div class="admin-loading">กำลังโหลด...</div>
+    <div style="padding:8px 16px 0">
+      <button class="admin-refresh-btn" onclick="adminLoadUsers()">🔄 โหลดข้อมูลใหม่</button>
+    </div>
+    <!-- Card grid view -->
+    <div id="admin-card-grid-wrap">
+      <div id="admin-card-grid" class="admin-card-grid">
+        <div class="admin-loading" style="grid-column:1/-1">กำลังโหลด...</div>
+      </div>
+    </div>
+    <!-- List view (original) -->
+    <div id="admin-list-view-wrap" style="display:none">
+      <div class="admin-sec-title">รายการ Users</div>
+      <div id="admin-user-list">
+        <div class="admin-loading">กำลังโหลด...</div>
+      </div>
     </div>
   </div>
 
@@ -2418,6 +2900,14 @@
       renderHero();
       renderList();
       if (document.getElementById('spark-wrap').classList.contains('show')) renderSpark();
+      // Update monthly summary button subtitle
+      const m = monthTxs();
+      const inc = m.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+      const exp = m.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+      const sub = document.getElementById('msummary-subtitle');
+      if (sub) sub.textContent = `${MONTHS[curM]} · รับ ${fmt(inc)} · จ่าย ${fmt(exp)}`;
+      const btn = document.getElementById('msummary-btn');
+      if (btn) btn.style.display = m.length ? 'flex' : 'none';
     }
 
     /* ── MONTH PICKER ────────────── */
@@ -2616,9 +3106,520 @@
     }
     function hideSyncing() { document.getElementById('syncing-overlay').classList.remove('show'); }
 
+    /* ── MONTHLY SUMMARY ──────────────────────────── */
+    function openMonthlySummary() {
+      document.getElementById('msummary-panel').classList.add('open');
+      document.getElementById('msummary-panel-title').textContent = `สรุป ${MONTHS[curM]} ${curY + 543}`;
+      renderMonthlySummary();
+    }
+    function closeMonthlySummary() {
+      document.getElementById('msummary-panel').classList.remove('open');
+    }
+    let _summaryTab = 'expense';
+    function renderMonthlySummary() {
+      const m = monthTxs();
+      const inc = m.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+      const exp = m.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+      const bal = inc - exp;
+      const savRate = inc > 0 ? Math.round((bal / inc) * 100) : 0;
+
+      // 7-month trend
+      const months7 = Array.from({ length: 6 }, (_, i) => {
+        let y = curY, mo = curM - (5 - i);
+        while (mo < 0) { mo += 12; y--; }
+        while (mo > 11) { mo -= 12; y++; }
+        return { y, mo, lbl: MONTHS_SHORT[mo] };
+      }).concat([{ y: curY, mo: curM, lbl: MONTHS_SHORT[curM] }]);
+
+      const maxV = Math.max(...months7.map(({ y, mo }) => {
+        const ts = txs.filter(t => { const d = new Date(t.date); return d.getFullYear() === y && d.getMonth() === mo; });
+        return Math.max(
+          ts.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0),
+          ts.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0)
+        );
+      }), 1);
+
+      const barsHtml = months7.map(({ y, mo, lbl }) => {
+        const ts = txs.filter(t => { const d = new Date(t.date); return d.getFullYear() === y && d.getMonth() === mo; });
+        const i = ts.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        const e = ts.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const ih = Math.max(Math.round(i / maxV * 64), i ? 3 : 0);
+        const eh = Math.max(Math.round(e / maxV * 64), e ? 3 : 0);
+        const isCur = y === curY && mo === curM;
+        return `<div class="msummary-bar-col">
+          <div class="msummary-bar-pair" style="height:64px">
+            <div class="msummary-bar i" style="height:${ih}px;${isCur ? 'opacity:1' : ''}"></div>
+            <div class="msummary-bar e" style="height:${eh}px;${isCur ? 'opacity:1' : ''}"></div>
+          </div>
+          <div class="msummary-bar-lbl" style="${isCur ? 'color:var(--acc);font-weight:700' : ''}">${lbl}</div>
+        </div>`;
+      }).join('');
+
+      // Category breakdown
+      function buildCatRows(type) {
+        const list = m.filter(t => t.type === type);
+        const total = list.reduce((s, t) => s + t.amount, 0);
+        const catMap = {};
+        list.forEach(t => { const k = t.cat || (type === 'income' ? '💵 รายได้อื่น' : '💸 อื่นๆ'); catMap[k] = (catMap[k] || 0) + t.amount; });
+        const sorted = Object.entries(catMap).sort((a, b) => b[1] - a[1]);
+        if (!sorted.length) return `<div class="admin-empty">ไม่มีรายการ</div>`;
+        return sorted.map(([cat, amt]) => {
+          const pct = total > 0 ? (amt / total * 100) : 0;
+          const ico = cat.split(' ')[0];
+          const color = type === 'income' ? 'var(--inc-mid)' : 'var(--exp-mid)';
+          const bg = type === 'income' ? 'var(--inc-bg)' : 'var(--exp-bg)';
+          return `<div class="msummary-cat-row">
+            <div class="msummary-cat-ico" style="background:${bg}">${ico}</div>
+            <div class="msummary-cat-bar-wrap">
+              <div class="msummary-cat-name">${cat.split(' ').slice(1).join(' ') || cat}<span>${fmt(amt)}</span></div>
+              <div class="msummary-cat-track">
+                <div class="msummary-cat-fill" style="width:${pct.toFixed(1)}%;background:${color}"></div>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
+      // Top transactions
+      const topTxs = [...m].sort((a, b) => b.amount - a.amount).slice(0, 5);
+      const topHtml = topTxs.length ? topTxs.map(t => `
+        <div class="admin-tx-row">
+          <div class="admin-tx-ico ${t.type}">${t.cat ? t.cat.split(' ')[0] : (t.type === 'income' ? '💰' : '💸')}</div>
+          <div class="admin-tx-body">
+            <div class="admin-tx-note">${t.note || t.cat || (t.type === 'income' ? 'รายรับ' : 'รายจ่าย')}</div>
+            <div class="admin-tx-date">${t.date}${t.cat ? ' · ' + t.cat : ''}</div>
+          </div>
+          <div class="admin-tx-amt ${t.type}">${t.type === 'income' ? '+' : '-'}${fmt(t.amount)}</div>
+        </div>`).join('') : `<div class="admin-empty">ไม่มีรายการ</div>`;
+
+      // Days with spending
+      const activeDays = new Set(m.map(t => t.date)).size;
+      const avgDaily = activeDays > 0 ? exp / activeDays : 0;
+
+      const html = `
+        <div class="msummary-hero">
+          <div class="msummary-hero-month">💰 ยอดคงเหลือ ${MONTHS[curM]} ${curY + 543}</div>
+          <div class="msummary-hero-bal${bal < 0 ? ' neg' : ''}">${bal < 0 ? '-' : ''}${fmt(Math.abs(bal))}</div>
+          <div class="msummary-hero-row">
+            <div class="msummary-hero-item">
+              <div class="msummary-hero-lbl"><span class="pip pip-i"></span>รายรับ</div>
+              <div class="msummary-hero-val" style="color:var(--inc)">${fmt(inc)}</div>
+            </div>
+            <div class="msummary-hero-item" style="margin-left:16px">
+              <div class="msummary-hero-lbl"><span class="pip pip-e"></span>รายจ่าย</div>
+              <div class="msummary-hero-val" style="color:var(--exp)">${fmt(exp)}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="msummary-insights">
+          <div class="msummary-insight">
+            <div class="msummary-insight-ico">📈</div>
+            <div class="msummary-insight-val">${savRate >= 0 ? savRate : 0}%</div>
+            <div class="msummary-insight-lbl">อัตราการออม<br>จากรายรับ</div>
+          </div>
+          <div class="msummary-insight">
+            <div class="msummary-insight-ico">📅</div>
+            <div class="msummary-insight-val">${m.length}</div>
+            <div class="msummary-insight-lbl">รายการทั้งหมด<br>${activeDays} วันที่มีรายการ</div>
+          </div>
+          <div class="msummary-insight">
+            <div class="msummary-insight-ico">💸</div>
+            <div class="msummary-insight-val">${fmtC(avgDaily)}</div>
+            <div class="msummary-insight-lbl">เฉลี่ยรายจ่าย<br>ต่อวัน</div>
+          </div>
+          <div class="msummary-insight">
+            <div class="msummary-insight-ico">🏆</div>
+            <div class="msummary-insight-val">${bal >= 0 ? '✅' : '⚠️'}</div>
+            <div class="msummary-insight-lbl">${bal >= 0 ? 'รายรับมากกว่า<br>รายจ่าย' : 'รายจ่ายมากกว่า<br>รายรับ'}</div>
+          </div>
+        </div>
+
+        <div class="msummary-chart-wrap">
+          <div class="msummary-chart-title">รายรับ <span style="color:var(--inc-mid)">■</span> vs รายจ่าย <span style="color:var(--exp-mid)">■</span> — 7 เดือน</div>
+          <div class="msummary-bars">${barsHtml}</div>
+        </div>
+
+        <div class="msummary-cats-wrap">
+          <div class="msummary-cats-title">
+            <span>หมวดหมู่</span>
+            <div class="msummary-cat-tabs">
+              <button class="msummary-cat-tab${_summaryTab === 'expense' ? ' active' : ''}" onclick="switchSummaryTab('expense')">รายจ่าย</button>
+              <button class="msummary-cat-tab${_summaryTab === 'income' ? ' active' : ''}" onclick="switchSummaryTab('income')">รายรับ</button>
+            </div>
+          </div>
+          <div id="summary-cat-rows">${buildCatRows(_summaryTab)}</div>
+        </div>
+
+        <div class="msummary-top-wrap">
+          <div class="msummary-chart-title" style="margin-bottom:10px">🏅 รายการสูงสุด 5 อันดับ</div>
+          ${topHtml}
+        </div>
+      `;
+
+      document.getElementById('msummary-content').innerHTML = html;
+    }
+
+    function switchSummaryTab(type) {
+      _summaryTab = type;
+      renderMonthlySummary();
+    }
+
+    /* ── ADMIN VIEW SWITCH ─────────────────────── */
+    let _adminView = 'cards';
+    let _adminAllData = [];
+
+    function adminSwitchView(v) {
+      _adminView = v;
+      document.getElementById('vtab-cards').classList.toggle('active', v === 'cards');
+      document.getElementById('vtab-list').classList.toggle('active', v === 'list');
+      document.getElementById('admin-card-grid-wrap').style.display = v === 'cards' ? 'block' : 'none';
+      document.getElementById('admin-list-view-wrap').style.display = v === 'list' ? 'block' : 'none';
+    }
+
+    /* ── ADMIN CARD GRID ───────────────────────── */
+    function renderAdminCardGrid(users) {
+      const grid = document.getElementById('admin-card-grid');
+      if (!users.length) { grid.innerHTML = '<div class="admin-empty" style="grid-column:1/-1">ไม่มี users</div>'; return; }
+
+      users.sort((a, b) => b.txList.length - a.txList.length);
+
+      grid.innerHTML = users.map((u, i) => {
+        const displayName = u.displayName || u.uid.slice(0, 8) + '…';
+        const avatarEl = u.photoURL
+          ? `<img class="admin-ucard-av" src="${u.photoURL}" onerror="this.style.display='none'">`
+          : `<div class="admin-ucard-av">👤</div>`;
+        const bal = u.inc - u.exp;
+
+        // mini 6-bar sparkline (last 6 months expense)
+        const now = new Date();
+        const months6 = Array.from({ length: 6 }, (_, j) => {
+          let y = now.getFullYear(), mo = now.getMonth() - (5 - j);
+          while (mo < 0) { mo += 12; y--; }
+          return { y, mo };
+        });
+        const maxV = Math.max(...months6.map(({ y, mo }) =>
+          u.txList.filter(t => { const d = new Date(t.date); return d.getFullYear() === y && d.getMonth() === mo; })
+            .filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0)
+        ), 1);
+        const sparkBars = months6.map(({ y, mo }) => {
+          const exp = u.txList.filter(t => { const d = new Date(t.date); return d.getFullYear() === y && d.getMonth() === mo; })
+            .filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+          const h = Math.max(Math.round(exp / maxV * 22), exp ? 2 : 0);
+          return `<div class="admin-ucard-spark-bar exp" style="height:${h}px"></div>`;
+        }).join('');
+
+        return `<div class="admin-ucard${u.isBanned ? ' banned-card' : ''}" onclick="openAdminDetail(${i})">
+          <div class="admin-ucard-top">
+            ${avatarEl}
+            <div class="admin-ucard-info">
+              <div class="admin-ucard-name">${u.isBanned ? '🚫 ' : ''}${displayName}</div>
+              <div class="admin-ucard-email">${u.email || 'UID: ' + u.uid.slice(0, 8)}</div>
+            </div>
+          </div>
+          <div class="admin-ucard-stats">
+            <div class="admin-ucard-stat">
+              <div class="admin-ucard-stat-lbl">รายรับ</div>
+              <div class="admin-ucard-stat-val inc">${fmtC(u.inc)}</div>
+            </div>
+            <div class="admin-ucard-stat">
+              <div class="admin-ucard-stat-lbl">รายจ่าย</div>
+              <div class="admin-ucard-stat-val exp">${fmtC(u.exp)}</div>
+            </div>
+          </div>
+          <div class="admin-ucard-spark">${sparkBars}</div>
+          <div class="admin-ucard-footer">
+            <div class="admin-ucard-txcount">📋 ${u.txList.length} รายการ · <span style="color:${bal >= 0 ? 'var(--inc)' : 'var(--exp)'}">คงเหลือ ${fmtC(bal)}</span></div>
+            <button class="admin-ucard-ban ${u.isBanned ? 'banned' : ''}" onclick="event.stopPropagation();adminToggleBanCard(event,'${u.uid}',${i},${u.isBanned})">${u.isBanned ? '✅ ปลดแบน' : '🚫 แบน'}</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    async function adminToggleBanCard(e, uid, idx, currentlyBanned) {
+      await adminToggleBan(e, uid, idx, currentlyBanned);
+    }
+
+    /* ── ADMIN USER DETAIL ─────────────────────── */
+    let _detailUser = null;
+    let _detailFilterMonth = 'all';
+    let _detailFilterType = 'all';
+    let _detailSearch = '';
+
+    function openAdminDetail(i) {
+      _detailUser = _adminAllData[i];
+      _detailFilterMonth = 'all';
+      _detailFilterType = 'all';
+      _detailSearch = '';
+      renderAdminDetailPanel();
+      document.getElementById('admin-detail').classList.add('open');
+    }
+
+    function closeAdminDetail() {
+      document.getElementById('admin-detail').classList.remove('open');
+    }
+
+    function renderAdminDetailPanel() {
+      const u = _detailUser;
+      if (!u) return;
+      const displayName = u.displayName || u.uid.slice(0, 10) + '…';
+
+      // Update header
+      document.getElementById('detail-title').textContent = displayName;
+      document.getElementById('detail-subtitle').textContent = u.email || 'UID: ' + u.uid;
+      const banBtn = document.getElementById('detail-ban-btn');
+      banBtn.textContent = u.isBanned ? '✅ ปลดแบน' : '🚫 แบน';
+      banBtn.style.borderColor = u.isBanned ? 'var(--inc-border)' : 'var(--exp-border)';
+      banBtn.style.background = u.isBanned ? 'var(--inc-bg)' : 'var(--exp-bg)';
+      banBtn.style.color = u.isBanned ? 'var(--inc)' : 'var(--exp)';
+
+      const allTxs = u.txList;
+      const totalInc = allTxs.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+      const totalExp = allTxs.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+
+      // Build month options
+      const monthSet = new Set(allTxs.map(t => t.date.slice(0, 7)));
+      const months = Array.from(monthSet).sort((a, b) => b.localeCompare(a));
+      const monthOpts = `<option value="all">ทุกเดือน</option>` +
+        months.map(m => { const [y, mo] = m.split('-'); return `<option value="${m}" ${_detailFilterMonth === m ? 'selected' : ''}>${MONTHS[parseInt(mo) - 1]} ${parseInt(y) + 543}</option>`; }).join('');
+
+      // All categories
+      const catSet = new Set(allTxs.map(t => t.cat).filter(Boolean));
+      const cats = Array.from(catSet);
+
+      // Filter
+      let filtered = [...allTxs];
+      if (_detailFilterMonth !== 'all') filtered = filtered.filter(t => t.date.startsWith(_detailFilterMonth));
+      if (_detailFilterType !== 'all') filtered = filtered.filter(t => t.type === _detailFilterType);
+      if (_detailSearch) filtered = filtered.filter(t => (t.note + t.cat).toLowerCase().includes(_detailSearch.toLowerCase()));
+      filtered.sort((a, b) => b.date.localeCompare(a.date));
+
+      const fInc = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+      const fExp = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+
+      const avatarEl = u.photoURL
+        ? `<img class="admin-detail-av" src="${u.photoURL}" onerror="this.style.display='none'">`
+        : `<div class="admin-detail-av">👤</div>`;
+
+      // Group filtered by date
+      const grps = {};
+      filtered.forEach(t => { if (!grps[t.date]) grps[t.date] = []; grps[t.date].push(t); });
+      const dates = Object.keys(grps).sort((a, b) => b.localeCompare(a));
+      const listHtml = !dates.length ? `<div class="admin-empty">ไม่มีรายการที่ตรงกัน</div>` :
+        dates.map(date => {
+          const items = grps[date];
+          const net = items.reduce((s, t) => s + (t.type === 'income' ? t.amount : -t.amount), 0);
+          const d = new Date(date);
+          const ds = `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear() + 543}`;
+          const rows = items.map(t => `
+            <div class="admin-tx-row">
+              <div class="admin-tx-ico ${t.type}">${t.cat ? t.cat.split(' ')[0] : (t.type === 'income' ? '💰' : '💸')}</div>
+              <div class="admin-tx-body">
+                <div class="admin-tx-note">${t.note || t.cat || (t.type === 'income' ? 'รายรับ' : 'รายจ่าย')}</div>
+                <div class="admin-tx-date">${t.date}${t.cat ? ' · ' + t.cat : ''}</div>
+              </div>
+              <div class="admin-tx-amt ${t.type}">${t.type === 'income' ? '+' : '-'}${fmt(t.amount)}</div>
+              <button class="admin-tx-del" onclick="adminDelTxDetail('${u.uid}','${t.id}',this)" title="ลบ">✕</button>
+            </div>`).join('');
+          return `<div style="margin-bottom:10px">
+            <div class="day-hdr">
+              <div class="day-meta"><span class="day-date">${ds}</span><span class="day-dow">${DAYS[d.getDay()]}</span></div>
+              <div class="day-net ${net >= 0 ? 'p' : 'n'}">${net >= 0 ? '+' : ''}${fmtC(net)}</div>
+            </div>
+            <div style="background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm)">${rows}</div>
+          </div>`;
+        }).join('');
+
+      document.getElementById('admin-detail-inner').innerHTML = `
+        <div class="admin-detail-hero">
+          ${avatarEl}
+          <div class="admin-detail-info">
+            <div class="admin-detail-name">${u.isBanned ? '🚫 ' : ''}${displayName}</div>
+            <div class="admin-detail-email">${u.email || 'UID: ' + u.uid.slice(0, 16)}</div>
+          </div>
+        </div>
+        <div class="admin-detail-stats">
+          <div class="admin-detail-stat">
+            <div class="admin-detail-stat-lbl">รายการ</div>
+            <div class="admin-detail-stat-val">${allTxs.length}</div>
+          </div>
+          <div class="admin-detail-stat">
+            <div class="admin-detail-stat-lbl">รายรับรวม</div>
+            <div class="admin-detail-stat-val inc">${fmtC(totalInc)}</div>
+          </div>
+          <div class="admin-detail-stat">
+            <div class="admin-detail-stat-lbl">รายจ่ายรวม</div>
+            <div class="admin-detail-stat-val exp">${fmtC(totalExp)}</div>
+          </div>
+        </div>
+        <div class="admin-detail-filters">
+          <div class="admin-detail-search">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" placeholder="ค้นหารายการ…" value="${_detailSearch}" oninput="_detailSearch=this.value;renderAdminDetailPanel()">
+          </div>
+          <div class="admin-month-filter">
+            <select class="admin-month-sel" onchange="_detailFilterMonth=this.value;renderAdminDetailPanel()">${monthOpts}</select>
+          </div>
+          <div class="admin-filter-row">
+            <button class="admin-fpill${_detailFilterType === 'all' ? ' active' : ''}" onclick="_detailFilterType='all';renderAdminDetailPanel()">ทั้งหมด (${filtered.length})</button>
+            <button class="admin-fpill${_detailFilterType === 'income' ? ' active' : ''}" onclick="_detailFilterType='income';renderAdminDetailPanel()" style="color:var(--inc)">💰 รายรับ</button>
+            <button class="admin-fpill${_detailFilterType === 'expense' ? ' active' : ''}" onclick="_detailFilterType='expense';renderAdminDetailPanel()" style="color:var(--exp)">💸 รายจ่าย</button>
+            ${cats.slice(0, 6).map(c => `<button class="admin-fpill${_detailFilterType === c ? ' active' : ''}" onclick="_detailFilterType='${c}';renderAdminDetailPanel()">${c}</button>`).join('')}
+          </div>
+          <div style="display:flex;gap:8px;padding:0 0 2px">
+            <div style="flex:1;background:var(--inc-bg);border:1px solid var(--inc-border);border-radius:8px;padding:8px 10px;text-align:center">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--inc);margin-bottom:2px">รายรับ (filter)</div>
+              <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--inc)">${fmt(fInc)}</div>
+            </div>
+            <div style="flex:1;background:var(--exp-bg);border:1px solid var(--exp-border);border-radius:8px;padding:8px 10px;text-align:center">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--exp);margin-bottom:2px">รายจ่าย (filter)</div>
+              <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--exp)">${fmt(fExp)}</div>
+            </div>
+          </div>
+        </div>
+        <div class="admin-detail-list">${listHtml}</div>
+      `;
+    }
+
+    async function adminDetailBan() {
+      const u = _detailUser;
+      if (!u) return;
+      const idx = _adminAllData.indexOf(u);
+      const fakeEvent = { stopPropagation: () => {}, currentTarget: document.getElementById('detail-ban-btn') };
+      await adminToggleBan(fakeEvent, u.uid, idx, u.isBanned);
+      // Refresh detail
+      renderAdminDetailPanel();
+    }
+
+    async function adminDelTxDetail(uid, txId, btn) {
+      if (!confirm('ลบรายการนี้?')) return;
+      const fns = window._adminImports;
+      const db = window._adminGetDb();
+      try {
+        await fns.deleteDoc(fns.doc(db, 'users', uid, 'transactions', txId));
+        if (_detailUser) _detailUser.txList = _detailUser.txList.filter(t => t.id !== txId);
+        renderAdminDetailPanel();
+        showToast('✅ ลบรายการแล้ว');
+      } catch (e) { showToast('❌ ลบไม่สำเร็จ: ' + e.message); }
+    }
+
+    /* ── SWIPE-TO-DISMISS sheets ─────────────────────────────
+       Works on every .overlay > .sheet combo.
+       • Drag the handle or sheet header to pull it down
+       • Release past 30% height → dismiss with slide-down
+       • Release below that → spring back
+    ─────────────────────────────────────────────────────── */
+    (function () {
+      const THRESH_RATIO = 0.28;  // dismiss when dragged > 28% of sheet height
+      const THRESH_VEL   = 0.55;  // or velocity px/ms fast flick
+
+      function attachSwipe(overlayId, closeFn) {
+        const overlay = document.getElementById(overlayId);
+        if (!overlay) return;
+
+        // Use MutationObserver so we get the sheet after it's shown
+        const setup = () => {
+          const sheet = overlay.querySelector('.sheet');
+          if (!sheet) return;
+          if (sheet._swipeAttached) return;
+          sheet._swipeAttached = true;
+
+          let startY = 0, curY = 0, startTime = 0, isDragging = false, startScrollTop = 0;
+
+          function onStart(e) {
+            // Only start drag if:
+            // 1) Touch begins on handle OR near top of sheet (top 60px)
+            // 2) Sheet is scrolled to the very top
+            const touch = e.touches ? e.touches[0] : e;
+            const rect = sheet.getBoundingClientRect();
+            const relY = touch.clientY - rect.top;
+            startScrollTop = sheet.scrollTop;
+
+            // Allow drag from anywhere at top when sheet is at scroll=0, or always from handle area
+            if (startScrollTop > 0 && relY > 60) return;
+
+            isDragging = true;
+            startY = touch.clientY;
+            curY = 0;
+            startTime = Date.now();
+            sheet.classList.add('dragging');
+          }
+
+          function onMove(e) {
+            if (!isDragging) return;
+            const touch = e.touches ? e.touches[0] : e;
+            const dy = touch.clientY - startY;
+            if (dy < 0) {
+              // Dragging up — let scroll handle it
+              sheet.style.transform = '';
+              return;
+            }
+            // Resist: slow down as you drag further (rubber band feel)
+            const resistance = 1 - Math.min(dy / (sheet.offsetHeight * 1.6), 0.55);
+            curY = dy * resistance;
+            sheet.style.transform = `translateY(${curY}px)`;
+            // Dim the backdrop proportionally
+            const progress = Math.min(curY / (sheet.offsetHeight * THRESH_RATIO * 2), 1);
+            overlay.style.background = `rgba(0,0,0,${0.52 * (1 - progress * 0.8)})`;
+            e.preventDefault();
+          }
+
+          function onEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            sheet.classList.remove('dragging');
+
+            const elapsed = Date.now() - startTime;
+            const vel = curY / Math.max(elapsed, 1);
+            const shouldDismiss = curY > sheet.offsetHeight * THRESH_RATIO || vel > THRESH_VEL;
+
+            if (shouldDismiss) {
+              // Animate out
+              sheet.classList.add('dismissing');
+              overlay.classList.add('closing');
+              overlay.style.background = '';
+              sheet.style.transform = '';
+              setTimeout(() => {
+                sheet.classList.remove('dismissing');
+                overlay.classList.remove('closing');
+                closeFn();
+              }, 280);
+            } else {
+              // Spring back
+              sheet.style.transition = 'transform .35s cubic-bezier(.32,1.06,.52,.98)';
+              sheet.style.transform = 'translateY(0)';
+              overlay.style.background = '';
+              setTimeout(() => { sheet.style.transition = ''; }, 360);
+            }
+            curY = 0;
+          }
+
+          sheet.addEventListener('touchstart', onStart, { passive: true });
+          sheet.addEventListener('touchmove', onMove, { passive: false });
+          sheet.addEventListener('touchend', onEnd, { passive: true });
+          sheet.addEventListener('touchcancel', onEnd, { passive: true });
+        };
+
+        // Attach immediately if already open, also watch for future opens
+        setup();
+        const obs = new MutationObserver(setup);
+        obs.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+      }
+
+      // Wire up all sheet overlays to their close functions
+      // Run after DOM is ready
+      document.addEventListener('DOMContentLoaded', () => {
+        attachSwipe('add-ov',   () => closeAdd());
+        attachSwipe('menu-ov',  () => closeMenu());
+      });
+      // Also run now in case DOMContentLoaded already fired
+      attachSwipe('add-ov',   () => closeAdd());
+      attachSwipe('menu-ov',  () => closeMenu());
+    })();
+
     /* ── KEYBOARD ────────────────── */
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') { closeAdd(); closeMenu(); closeMPicker(); closeAdminPanel(); }
+      if (e.key === 'Escape') { closeAdd(); closeMenu(); closeMPicker(); closeAdminPanel(); closeAdminDetail(); closeMonthlySummary(); }
       if (e.key === 'Enter' && document.getElementById('add-ov').classList.contains('open')) submitTx();
     });
 
@@ -2652,6 +3653,8 @@
 
       const listEl = document.getElementById('admin-user-list');
       listEl.innerHTML = '<div class="admin-loading">⏳ กำลังโหลดข้อมูล users...</div>';
+      const cardGrid = document.getElementById('admin-card-grid');
+      if (cardGrid) cardGrid.innerHTML = '<div class="admin-loading" style="grid-column:1/-1">⏳ กำลังโหลด...</div>';
 
       try {
         const { collection, getDocs } = fns;
@@ -2698,7 +3701,9 @@
         await Promise.all(userFetches);
 
         adminUpdateStats(allUserData, totalInc, totalExp);
+        _adminAllData = allUserData;
         renderAdminUserList(allUserData);
+        renderAdminCardGrid(allUserData);
 
       } catch (e) {
         console.error('Admin load error', e);
@@ -2820,6 +3825,11 @@
         }
         // Reload to reflect new state
         await adminLoadUsers();
+        // Update detail panel if open
+        if (_detailUser && _detailUser.uid === uid) {
+          _detailUser.isBanned = !currentlyBanned;
+          renderAdminDetailPanel();
+        }
       } catch (e2) {
         console.error('Ban error', e2);
         showToast('❌ ดำเนินการไม่สำเร็จ: ' + e2.message);
