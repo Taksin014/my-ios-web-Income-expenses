@@ -2648,16 +2648,16 @@
       background: var(--surface);
       border: 1px solid var(--border2);
       border-radius: var(--radius-sm);
-      padding: 14px;
+      padding: 16px;
       display: flex;
-      gap: 12px;
+      gap: 16px;
       align-items: center;
     }
 
     .ms-donut-svg-wrap {
       flex-shrink: 0;
       position: relative;
-      width: 88px; height: 88px;
+      width: 100px; height: 100px;
     }
 
     .ms-donut-center {
@@ -2671,15 +2671,14 @@
 
     .ms-donut-center-val {
       font-family: 'DM Mono', monospace;
-      font-size: clamp(10px, 3vw, 14px);
+      font-size: 13px;
       font-weight: 700;
       color: var(--text);
       line-height: 1;
       text-align: center;
-      word-break: break-all;
     }
 
-    .ms-donut-center-lbl { font-size: 7px; color: var(--text-dim); margin-top: 2px; }
+    .ms-donut-center-lbl { font-size: 8px; color: var(--text-dim); margin-top: 2px; }
 
     .ms-donut-legend { flex: 1; min-width: 0; }
 
@@ -2694,14 +2693,14 @@
     .ms-donut-leg-row:last-child { border-bottom: none; }
 
     .ms-donut-leg-dot {
-      width: 7px; height: 7px;
+      width: 8px; height: 8px;
       border-radius: 2px;
       flex-shrink: 0;
     }
 
     .ms-donut-leg-name {
       flex: 1;
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text);
       white-space: nowrap;
       overflow: hidden;
@@ -2710,14 +2709,14 @@
 
     .ms-donut-leg-pct {
       font-family: 'DM Mono', monospace;
-      font-size: 9px;
+      font-size: 10px;
       color: var(--text-sub);
       flex-shrink: 0;
     }
 
     .ms-donut-leg-amt {
       font-family: 'DM Mono', monospace;
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 600;
       flex-shrink: 0;
     }
@@ -3055,13 +3054,13 @@
       background: var(--surface);
       border: 1px solid var(--border2);
       border-radius: var(--radius-sm);
-      padding: 12px 10px 8px;
+      padding: 14px 12px 10px;
     }
 
     .ms-month-chart-scroll {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 2px;
+      padding-bottom: 4px;
     }
 
     .ms-month-chart-scroll::-webkit-scrollbar { height: 2px; }
@@ -3070,9 +3069,9 @@
     .ms-month-chart-inner {
       display: flex;
       align-items: flex-end;
-      gap: 3px;
+      gap: 4px;
       min-width: max-content;
-      height: 100px;
+      height: 110px;
     }
 
     .ms-mchart-col {
@@ -3080,7 +3079,7 @@
       flex-direction: column;
       align-items: center;
       gap: 2px;
-      width: 20px;
+      width: 22px;
       flex-shrink: 0;
       cursor: pointer;
       position: relative;
@@ -3117,7 +3116,7 @@
       display: flex;
       gap: 2px;
       align-items: flex-end;
-      height: 70px;
+      height: 80px;
       width: 100%;
     }
 
@@ -3134,7 +3133,7 @@
     .ms-mchart-bar.i.today, .ms-mchart-bar.e.today { opacity: 1; filter: brightness(1.2); }
 
     .ms-mchart-dlbl {
-      font-size: 7px;
+      font-size: 8px;
       color: var(--text-dim);
       font-family: 'DM Mono', monospace;
       text-align: center;
@@ -4374,8 +4373,8 @@
           const day = i + 1;
           const dateStr = `${_sumY}-${String(_sumM + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
           const isToday = dateStr === today;
-          const ih = v.inc > 0 ? Math.max(Math.round(v.inc / maxV * 70), 3) : 0;
-          const eh = v.exp > 0 ? Math.max(Math.round(v.exp / maxV * 70), 3) : 0;
+          const ih = v.inc > 0 ? Math.max(Math.round(v.inc / maxV * 80), 3) : 0;
+          const eh = v.exp > 0 ? Math.max(Math.round(v.exp / maxV * 80), 3) : 0;
           const hasData = v.inc > 0 || v.exp > 0;
           const net = v.inc - v.exp;
           return `<div class="ms-mchart-col">
